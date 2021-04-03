@@ -4,6 +4,7 @@ import br.com.restassuredapitesting.suites.Acceptance;
 import br.com.restassuredapitesting.suites.Contract;
 import br.com.restassuredapitesting.tests.base.tests.BaseTest;
 import br.com.restassuredapitesting.tests.booking.requests.GetBookingRequest;
+import br.com.restassuredapitesting.tests.booking.requests.GetOneBookingRequest;
 import br.com.restassuredapitesting.utils.Utils;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
@@ -23,6 +24,13 @@ import static org.hamcrest.Matchers.lessThan;
 public class GetBookingTest extends BaseTest {
 
     GetBookingRequest getBookingRequest = new GetBookingRequest();
+    GetOneBookingRequest getOneBookingRequest = new GetOneBookingRequest();
+
+    int primeiroId = getBookingRequest.allBookings()
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("[0].bookingid");
 
     @Test
     @Severity(SeverityLevel.NORMAL)
@@ -52,4 +60,20 @@ public class GetBookingTest extends BaseTest {
                 );
     }
 
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(Acceptance.class)
+    @DisplayName("Listar reservas filtrando por primeiro nome")
+    public void ValidarIdsDasReservasFiltrandoPorPrimeiroNome() {
+        String primeiroNome = getOneBookingRequest.oneBooking(primeiroId)
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("firstname");
+
+        getBookingRequest.allBookingsByString("firstname", primeiroNome).then()
+                .statusCode(200)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body("size()", greaterThan(0));
+    }
 }
