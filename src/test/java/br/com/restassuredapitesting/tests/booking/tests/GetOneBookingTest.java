@@ -1,18 +1,22 @@
 package br.com.restassuredapitesting.tests.booking.tests;
 
+import br.com.restassuredapitesting.suites.Contract;
 import br.com.restassuredapitesting.tests.base.tests.BaseTest;
 import br.com.restassuredapitesting.tests.booking.requests.GetBookingRequest;
 import br.com.restassuredapitesting.tests.booking.requests.GetOneBookingRequest;
 import br.com.restassuredapitesting.utils.Utils;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
 
+@Feature("Reservas")
 public class GetOneBookingTest extends BaseTest {
 
     GetBookingRequest getBookingRequest = new GetBookingRequest();
@@ -20,6 +24,7 @@ public class GetOneBookingTest extends BaseTest {
 
     @Test
     @Severity(SeverityLevel.BLOCKER)
+    @Category(Contract.class)
     @DisplayName("Garantir o contrato de retorno de uma reserva específica")
     public void garantirContratoDeUmaReserva() throws Exception {
         int primeiroId = getBookingRequest.allBookings()
