@@ -76,4 +76,21 @@ public class GetBookingTest extends BaseTest {
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
     }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(Acceptance.class)
+    @DisplayName("Listar reservas filtrando por último nome")
+    public void ValidarIdsDasReservasFiltrandoPorUltimoNome() {
+        String ultimoNome = getOneBookingRequest.oneBooking(primeiroId)
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("lasttname");
+
+        getBookingRequest.allBookingsByString("lasttname", ultimoNome).then()
+                .statusCode(200)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body("size()", greaterThan(0));
+    }
 }
