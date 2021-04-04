@@ -1,6 +1,7 @@
 package br.com.restassuredapitesting.tests.booking.tests;
 
 import br.com.restassuredapitesting.suites.Acceptance;
+import br.com.restassuredapitesting.suites.E2e;
 import br.com.restassuredapitesting.tests.base.tests.BaseTest;
 import br.com.restassuredapitesting.tests.booking.requests.PostBookingRequest;
 import br.com.restassuredapitesting.utils.Utils;
@@ -13,6 +14,7 @@ import org.junit.experimental.categories.Category;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -32,5 +34,16 @@ public class PostBookingTest extends BaseTest {
                 .statusCode(201)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(E2e.class)
+    @DisplayName("Tentar criar uma nova reserva com payload inválido")
+    public void validarCriarUmaNovaReservaComPayloadInvalido() throws Exception {
+        postBookingRequest.newBooking(Utils.invalidPayloadBooking()).then()
+                .statusCode(500)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body(containsString("Internal Server Error"));
     }
 }

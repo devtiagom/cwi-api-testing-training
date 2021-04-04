@@ -21,6 +21,18 @@ public class Utils {
         return payload;
     }
 
+    public static JSONObject invalidPayloadBooking() {
+        JSONObject payload = new JSONObject();
+
+        payload.put("firstname", "Ronaldo");
+        payload.put("lastname", "Fenõmeno");
+        payload.put("totalprice", 111);
+        payload.put("depositpaid", true);
+        payload.put("additionalneeds", "Breakfast");
+
+        return payload;
+    }
+
     public static  String getContractsBasePath(String pack, String contract) {
         return System.getProperty("user.dir")
                 + "/src/test/java/br/com/restassuredapitesting/tests/"

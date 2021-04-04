@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -145,8 +146,8 @@ public class GetBookingTest extends BaseTest {
                 .body("size()", greaterThan(0));
     }
 
-    // Este teste falha porque a API está retornando status http não está retornando,
-    // status 500 com filtro mal formatado. Neste caso reportaria um bug.
+    // Este teste falha porque a API não está retornando status 500 com filtro mal formatado.
+    // Neste caso reportaria um bug.
     @Test
     @Severity(SeverityLevel.NORMAL)
     @Category(E2e.class)
@@ -155,6 +156,7 @@ public class GetBookingTest extends BaseTest {
         getBookingRequest.allBookingsByOneParam("checkin", "01-01-2018")
                 .then()
                 .statusCode(500)
-                .time(lessThan(2L), TimeUnit.SECONDS);
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body(containsString("Internal Server Error"));
     }
 }
