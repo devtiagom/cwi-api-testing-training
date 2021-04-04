@@ -60,6 +60,8 @@ public class GetBookingTest extends BaseTest {
                 );
     }
 
+    // Antes de testar o endpoint busquei um primeiro nome que existe nas reservas,
+    // para garantir que devesse esperar sucesso no teste
     @Test
     @Severity(SeverityLevel.NORMAL)
     @Category(Acceptance.class)
@@ -77,6 +79,8 @@ public class GetBookingTest extends BaseTest {
                 .body("size()", greaterThan(0));
     }
 
+    // Antes de testar o endpoint busquei um último nome que existe nas reservas,
+    // para garantir que devesse esperar sucesso no teste
     @Test
     @Severity(SeverityLevel.NORMAL)
     @Category(Acceptance.class)
@@ -89,6 +93,28 @@ public class GetBookingTest extends BaseTest {
                 .path("lasttname");
 
         getBookingRequest.allBookingsByString("lasttname", ultimoNome).then()
+                .statusCode(200)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body("size()", greaterThan(0));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(Acceptance.class)
+    @DisplayName("Listar reservas filtrando por data de checkin")
+    public void ValidarIdsDasReservasFiltrandoPorCheckin() {
+        getBookingRequest.allBookingsByString("checkin", "2018-01-01").then()
+                .statusCode(200)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body("size()", greaterThan(0));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(Acceptance.class)
+    @DisplayName("Listar reservas filtrando por data de checkout")
+    public void ValidarIdsDasReservasFiltrandoPorCheckout() {
+        getBookingRequest.allBookingsByString("checkout", "2018-01-01").then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));

@@ -22,6 +22,8 @@ public class DeleteOneBookingTest extends BaseTest {
     GetBookingRequest getBookingRequest = new GetBookingRequest();
     DeleteOneBookingRequest deleteOneBookingRequest = new DeleteOneBookingRequest();
 
+    // Este teste falha porque a API está retornando status http 201 (Created),
+    // e me pareceu mais coerente esperar um status 200 (Ok). Neste caso reportaria um bug.
     @Test
     @Severity(SeverityLevel.NORMAL)
     @Category(Acceptance.class)

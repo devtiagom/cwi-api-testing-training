@@ -15,7 +15,7 @@ public class GetBookingRequest {
                 .get("booking");
     }
 
-    @Step("Buscar reservas utilizando por nome")
+    @Step("Buscar reservas filtrando por um parâmetro")
     public Response allBookingsByString(String param, String value) {
         return given()
                 .param(param, value)
