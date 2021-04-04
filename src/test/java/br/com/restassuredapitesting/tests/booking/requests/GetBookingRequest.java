@@ -16,9 +16,28 @@ public class GetBookingRequest {
     }
 
     @Step("Buscar reservas filtrando por um parâmetro")
-    public Response allBookingsByString(String param, String value) {
+    public Response allBookingsByOneParam(String param, String value) {
         return given()
                 .param(param, value)
+                .when()
+                .get("booking");
+    }
+
+    @Step("Buscar reservas filtrando por datas de checkin e checkout")
+    public Response allBookingsByCheckinAndCheckout(String checkin, String checkout) {
+        return given()
+                .param("checkin", checkin)
+                .param("checkout", checkout)
+                .when()
+                .get("booking");
+    }
+
+    @Step("Buscar reservas filtrando por nome e datas de checkin e checkout")
+    public Response allBookingsByNameAndCheckinAndCheckout(String firstname, String checkin, String checkout) {
+        return given()
+                .param("firstname", firstname)
+                .param("checkin", checkin)
+                .param("checkout", checkout)
                 .when()
                 .get("booking");
     }

@@ -73,7 +73,7 @@ public class GetBookingTest extends BaseTest {
                 .extract()
                 .path("firstname");
 
-        getBookingRequest.allBookingsByString("firstname", primeiroNome).then()
+        getBookingRequest.allBookingsByOneParam("firstname", primeiroNome).then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
@@ -92,7 +92,7 @@ public class GetBookingTest extends BaseTest {
                 .extract()
                 .path("lasttname");
 
-        getBookingRequest.allBookingsByString("lasttname", ultimoNome).then()
+        getBookingRequest.allBookingsByOneParam("lasttname", ultimoNome).then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
@@ -103,7 +103,7 @@ public class GetBookingTest extends BaseTest {
     @Category(Acceptance.class)
     @DisplayName("Listar reservas filtrando por data de checkin")
     public void ValidarIdsDasReservasFiltrandoPorCheckin() {
-        getBookingRequest.allBookingsByString("checkin", "2018-01-01").then()
+        getBookingRequest.allBookingsByOneParam("checkin", "2018-01-01").then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
@@ -114,7 +114,31 @@ public class GetBookingTest extends BaseTest {
     @Category(Acceptance.class)
     @DisplayName("Listar reservas filtrando por data de checkout")
     public void ValidarIdsDasReservasFiltrandoPorCheckout() {
-        getBookingRequest.allBookingsByString("checkout", "2018-01-01").then()
+        getBookingRequest.allBookingsByOneParam("checkout", "2018-01-01").then()
+                .statusCode(200)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body("size()", greaterThan(0));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(Acceptance.class)
+    @DisplayName("Listar reservas filtrando por datas de checkin e checkout")
+    public void ValidarIdsDasReservasFiltrandoPorCheckinECheckout() {
+        getBookingRequest.allBookingsByCheckinAndCheckout("2018-01-01", "2018-01-15")
+                .then()
+                .statusCode(200)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body("size()", greaterThan(0));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(Acceptance.class)
+    @DisplayName("Listar reservas filtrando por nome e datas de checkin e checkout")
+    public void ValidarIdsDasReservasFiltrandoPorNomeECheckinECheckout() {
+        getBookingRequest.allBookingsByNameAndCheckinAndCheckout("Julia", "2018-01-01", "2018-01-15")
+                .then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
