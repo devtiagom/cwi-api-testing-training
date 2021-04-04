@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
         GetOneBookingTest.class,
         PostBookingTest.class,
         PutBookingTest.class,
-        DeleteOneBookingTest.class,
+        DeleteBookingTest.class,
         PostAuthTest.class
 })
 public class Acceptance {

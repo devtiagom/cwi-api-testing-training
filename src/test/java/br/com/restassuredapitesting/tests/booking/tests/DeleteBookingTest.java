@@ -1,8 +1,9 @@
 package br.com.restassuredapitesting.tests.booking.tests;
 
 import br.com.restassuredapitesting.suites.Acceptance;
+import br.com.restassuredapitesting.suites.E2e;
 import br.com.restassuredapitesting.tests.base.tests.BaseTest;
-import br.com.restassuredapitesting.tests.booking.requests.DeleteOneBookingRequest;
+import br.com.restassuredapitesting.tests.booking.requests.DeleteBookingRequest;
 import br.com.restassuredapitesting.tests.booking.requests.GetBookingRequest;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
@@ -17,10 +18,10 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.lessThan;
 
 @Feature("Reservas")
-public class DeleteOneBookingTest extends BaseTest {
+public class DeleteBookingTest extends BaseTest {
 
     GetBookingRequest getBookingRequest = new GetBookingRequest();
-    DeleteOneBookingRequest deleteOneBookingRequest = new DeleteOneBookingRequest();
+    DeleteBookingRequest deleteBookingRequest = new DeleteBookingRequest();
 
     // Este teste falha porque a API está retornando status http 201 (Created),
     // e me pareceu mais coerente esperar um status 200 (Ok). Neste caso reportaria um bug.
@@ -35,9 +36,26 @@ public class DeleteOneBookingTest extends BaseTest {
                 .extract()
                 .path("[0].bookingid");
 
-        deleteOneBookingRequest.deletarUmaReservaComToken(primeiroId).then()
+        deleteBookingRequest.deletarUmaReservaComToken(primeiroId).then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body(containsString("Deleted"));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(E2e.class)
+    @DisplayName("Tentar deletar uma reserva sem autorização")
+    public void validarDeletarUmaReservaSemToken() {
+        int primeiroId = getBookingRequest.allBookings()
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("[0].bookingid");
+
+        deleteBookingRequest.deletarUmaReservaSemToken(primeiroId).then()
+                .statusCode(403)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body(containsString("Forbidden"));
     }
 }
