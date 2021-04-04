@@ -64,4 +64,17 @@ public class PutBookingTest extends BaseTest {
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body(containsString("Forbidden"));
     }
+
+    // Este teste falha porque a API está retornando status http 405 (Method Not Allowed),
+    // e me pareceu mais coerente esperar um status 401 (Not Found). Neste caso reportaria um bug.
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(E2e.class)
+    @DisplayName("Tentar alterar uma reserva que não existe")
+    public void validarAlterarUmaReservaInexistente() throws Exception {
+        putBookingRequest.alterarUmaReservaComToken(1234, Utils.validPayloadBooking()).then()
+                .statusCode(401)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body(containsString("Not Found"));
+    }
 }
