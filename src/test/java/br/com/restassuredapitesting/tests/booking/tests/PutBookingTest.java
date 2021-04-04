@@ -1,6 +1,7 @@
 package br.com.restassuredapitesting.tests.booking.tests;
 
 import br.com.restassuredapitesting.suites.Acceptance;
+import br.com.restassuredapitesting.suites.E2e;
 import br.com.restassuredapitesting.tests.base.tests.BaseTest;
 import br.com.restassuredapitesting.tests.booking.requests.GetBookingRequest;
 import br.com.restassuredapitesting.tests.booking.requests.PutBookingRequest;
@@ -14,6 +15,7 @@ import org.junit.experimental.categories.Category;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -23,20 +25,43 @@ public class PutBookingTest extends BaseTest {
     GetBookingRequest getBookingRequest = new GetBookingRequest();
     PutBookingRequest putBookingRequest = new PutBookingRequest();
 
+    int primeiroId = getBookingRequest.allBookings()
+            .then()
+            .statusCode(200)
+            .extract()
+            .path("[0].bookingid");
+
     @Test
     @Severity(SeverityLevel.NORMAL)
     @Category(Acceptance.class)
     @DisplayName("Alterar uma reserva utilizando token")
     public void validarAlterarUmaReservaUtilizandoToken() throws Exception {
-        int primeiroId = getBookingRequest.allBookings()
-                .then()
-                .statusCode(200)
-                .extract()
-                .path("[0].bookingid");
-
         putBookingRequest.alterarUmaReservaComToken(primeiroId, Utils.validPayloadBooking()).then()
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(E2e.class)
+    @DisplayName("Tentar alterar uma reserva sem token")
+    public void validarAlterarUmaReservaSemToken() throws Exception {
+        putBookingRequest.alterarUmaReservaSemToken(primeiroId, Utils.validPayloadBooking()).then()
+                .statusCode(403)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body(containsString("Forbidden"));
+    }
+
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(E2e.class)
+    @DisplayName("Alterar uma reserva utilizando token inválido")
+    public void validarAlterarUmaReservaUtilizandoTokenInvalido() throws Exception {
+        putBookingRequest.alterarUmaReservaComTokenInvalido(primeiroId, Utils.validPayloadBooking())
+                .then()
+                .statusCode(403)
+                .time(lessThan(2L), TimeUnit.SECONDS)
+                .body(containsString("Forbidden"));
     }
 }

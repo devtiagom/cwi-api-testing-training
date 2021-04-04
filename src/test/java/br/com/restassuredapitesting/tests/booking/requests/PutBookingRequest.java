@@ -20,4 +20,25 @@ public class PutBookingRequest {
                 .body(payload.toJSONString())
                 .put("booking/" + id);
     }
+
+    @Step("Alterar uma reserva sem token")
+    public Response alterarUmaReservaSemToken(int id, JSONObject payload) {
+        return given()
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .when()
+                .body(payload.toJSONString())
+                .put("booking/" + id);
+    }
+
+    @Step("Alterar uma reserva com token Inválido")
+    public Response alterarUmaReservaComTokenInvalido(int id, JSONObject payload) {
+        return given()
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .header("Cookie", "token=12345678")
+                .when()
+                .body(payload.toJSONString())
+                .put("booking/" + id);
+    }
 }
