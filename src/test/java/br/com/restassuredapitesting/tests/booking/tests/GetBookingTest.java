@@ -2,6 +2,7 @@ package br.com.restassuredapitesting.tests.booking.tests;
 
 import br.com.restassuredapitesting.suites.Acceptance;
 import br.com.restassuredapitesting.suites.Contract;
+import br.com.restassuredapitesting.suites.E2e;
 import br.com.restassuredapitesting.tests.base.tests.BaseTest;
 import br.com.restassuredapitesting.tests.booking.requests.GetBookingRequest;
 import br.com.restassuredapitesting.tests.booking.requests.GetOneBookingRequest;
@@ -142,5 +143,18 @@ public class GetBookingTest extends BaseTest {
                 .statusCode(200)
                 .time(lessThan(2L), TimeUnit.SECONDS)
                 .body("size()", greaterThan(0));
+    }
+
+    // Este teste falha porque a API está retornando status http não está retornando,
+    // status 500 com filtro mal formatado. Neste caso reportaria um bug.
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Category(E2e.class)
+    @DisplayName("Tentar listar reservas com filtro mal formatado")
+    public void ValidarIdsReservasComFiltroMalFormatado() {
+        getBookingRequest.allBookingsByOneParam("checkin", "01-01-2018")
+                .then()
+                .statusCode(500)
+                .time(lessThan(2L), TimeUnit.SECONDS);
     }
 }
